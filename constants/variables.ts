@@ -1,0 +1,11 @@
+export const TMDB_API_KEY = process.env.EXPO_PUBLIC_MOVIE_API_KEY!;
+export const TMDB_BASE_URL = process.env.EXPO_PUBLIC_MOVIE_BASE_URL!;
+
+export const PROJECT_ID = process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!;
+export const DATABASE_ID = process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!;
+export const METRICS_ID = process.env.EXPO_PUBLIC_APPWRITE_METRICS_ID!;
+export const MOVIE_ID = process.env.EXPO_PUBLIC_APPWRITE_MOVIE_ID!;
+export const USER_ID = process.env.EXPO_PUBLIC_APPWRITE_USER_ID!;
+
+export const EXPO_PUBLIC_APPWRITE_DELETE_ACCOUNT_FUNCTION_ID =
+	process.env.EXPO_PUBLIC_APPWRITE_DELETE_ACCOUNT_FUNCTION_ID!;
