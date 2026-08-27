@@ -32,7 +32,7 @@ const functions = new Functions(client);
 export const createUser = async (
 	email: string,
 	password: string,
-	name: string,
+	name: string
 ) => {
 	try {
 		// First create the auth user
@@ -40,17 +40,17 @@ export const createUser = async (
 			ID.unique(),
 			email,
 			password,
-			name,
+			name
 		);
 		if (!newAuthUser) {
-			throw new Error('Failed to create auth account');
+			throw new Error("Failed to create auth account");
 		}
 
 		// Create a session for the new user to be able to create their profile
 		await account.createEmailPasswordSession(email, password);
 
 		// Now create their user profile
-		const avatarUrl = avatars.getInitials(name).toString();
+		const avatarUrl = avatars.getInitialsURL(name).toString();
 		const newDBUser = await database.createDocument(
 			DATABASE_ID,
 			USER_ID,
@@ -60,16 +60,16 @@ export const createUser = async (
 				email,
 				name,
 				avatar: avatarUrl,
-			},
+			}
 		);
 
 		// Delete the temporary session since they need to sign in properly
-		await account.deleteSession('current');
+		await account.deleteSession("current");
 
-		return {success: true};
+		return { success: true };
 	} catch (error) {
-		console.error('Error creating user:', error);
-		throw new Error('Failed to create account');
+		console.error("Error creating user:", error);
+		throw new Error("Failed to create account");
 	}
 };
 
@@ -77,7 +77,7 @@ export const signin = async (email: string, password: string) => {
 	try {
 		const session = await account.createEmailPasswordSession(email, password);
 		const user = await account.get();
-		return {success: true, user, session};
+		return { success: true, user, session };
 	} catch (error: any) {
 		console.log(error);
 		throw new Error(error);
@@ -86,11 +86,11 @@ export const signin = async (email: string, password: string) => {
 
 export const signout = async () => {
 	try {
-		await account.deleteSession('current');
-		return {success: true};
+		await account.deleteSession("current");
+		return { success: true };
 	} catch (error) {
-		console.error('Signout error:', error);
-		return {success: false, error};
+		console.error("Signout error:", error);
+		return { success: false, error };
 	}
 };
 
@@ -98,12 +98,12 @@ export const signout = async () => {
 export const updateSearchCount = async (query: string, movie: Movie) => {
 	try {
 		const result = await database.listDocuments(DATABASE_ID, METRICS_ID, [
-			Query.contains('searchTerm', query) || Query.contains('title', query),
+			Query.contains("searchTerm", query) || Query.contains("title", query),
 		]);
 
 		if (result.documents.length > 0) {
 			const sortedMovies = result.documents.sort(
-				(a, b) => b.release_date - a.release_date,
+				(a, b) => b.release_date - a.release_date
 			);
 			const existingMovie = sortedMovies[0];
 
@@ -113,7 +113,7 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
 				existingMovie.$id,
 				{
 					count: existingMovie.count + 1,
-				},
+				}
 			);
 		} else {
 			const newMovieCount: MovieCount = {
@@ -121,16 +121,17 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
 				count: 1,
 				movie_id: movie.id,
 				title: movie.title,
-				poster_url: movie.poster_path
-					? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-					: 'https://placehold.co/600x400/1a1a1a/ffffff.png',
+				poster_url:
+					movie.poster_path ?
+						`https://image.tmdb.org/t/p/w500${movie.poster_path}`
+					:	"https://placehold.co/600x400/1a1a1a/ffffff.png",
 			};
 
 			await database.createDocument(
 				DATABASE_ID,
 				METRICS_ID,
 				ID.unique(),
-				newMovieCount,
+				newMovieCount
 			);
 		}
 	} catch (error) {
@@ -145,7 +146,7 @@ export const getTrendingMovies = async (): Promise<
 > => {
 	try {
 		const response = await database.listDocuments(DATABASE_ID, METRICS_ID, [
-			Query.orderDesc('count'),
+			Query.orderDesc("count"),
 			Query.limit(5),
 		]);
 
@@ -156,13 +157,13 @@ export const getTrendingMovies = async (): Promise<
 		// Fetch all movie details first
 		const movieDetails = await Promise.all(
 			trendingMovies.map((movie) =>
-				fetchMovieDetails(movie.movie_id.toString()),
-			),
+				fetchMovieDetails(movie.movie_id.toString())
+			)
 		);
 
 		// Create a map of movie_id to release_date
 		const releaseDates = new Map(
-			movieDetails.map((movie) => [movie.id, movie.release_date]),
+			movieDetails.map((movie) => [movie.id, movie.release_date])
 		);
 
 		// Sort by count first, then by date for equal counts
@@ -184,8 +185,8 @@ export const getTrendingMovies = async (): Promise<
 export const savedMovie = async (movieId: number) => {
 	const currentUser = await account.get();
 	const response = await database.listDocuments(DATABASE_ID, MOVIE_ID, [
-		Query.equal('movieId', movieId),
-		Query.equal('userId', currentUser.$id), // Add user filter
+		Query.equal("movieId", movieId),
+		Query.equal("userId", currentUser.$id), // Add user filter
 	]);
 
 	return response.documents.length > 0;
@@ -209,7 +210,7 @@ export const saveMovie = async (movieId: number) => {
 		});
 	} catch (error) {
 		console.log(error);
-		throw new Error('Failed to save movie');
+		throw new Error("Failed to save movie");
 	}
 };
 
@@ -217,8 +218,8 @@ export const saveMovie = async (movieId: number) => {
 const getSavedMovieDocId = async (movieId: number) => {
 	const currentUser = await account.get();
 	const response = await database.listDocuments(DATABASE_ID, MOVIE_ID, [
-		Query.equal('movieId', movieId),
-		Query.equal('userId', currentUser.$id), // Add user filter
+		Query.equal("movieId", movieId),
+		Query.equal("userId", currentUser.$id), // Add user filter
 	]);
 	return response.documents[0]?.$id;
 };
@@ -228,13 +229,13 @@ export const removeMovie = async (movieId: number) => {
 	try {
 		const docId = await getSavedMovieDocId(movieId);
 		if (!docId) {
-			throw new Error('Movie not found');
+			throw new Error("Movie not found");
 		}
 		await database.deleteDocument(DATABASE_ID, MOVIE_ID, docId);
-		return {success: true};
+		return { success: true };
 	} catch (error) {
-		console.error('Error removing movie:', error);
-		throw new Error('Failed to remove movie');
+		console.error("Error removing movie:", error);
+		throw new Error("Failed to remove movie");
 	}
 };
 
@@ -243,14 +244,14 @@ const savedMoviesId = async () => {
 	try {
 		const currentUser = await account.get();
 		const response = await database.listDocuments(DATABASE_ID, MOVIE_ID, [
-			Query.equal('userId', currentUser.$id), // Filter by current user
+			Query.equal("userId", currentUser.$id), // Filter by current user
 			Query.limit(100), // Increased from default 25
 		]);
 
 		if (!response.documents) return [];
 		return response.documents.map((doc) => doc.movieId);
 	} catch (error) {
-		console.error('Error fetching saved movies:', error);
+		console.error("Error fetching saved movies:", error);
 		return [];
 	}
 };
@@ -263,7 +264,7 @@ export const fetchSavedMovies = async () => {
 		savedIds.map(async (movieId) => {
 			const movieDetails = await fetchMovieDetails(movieId.toString());
 			return movieDetails;
-		}),
+		})
 	);
 
 	return savedMovies;
@@ -273,17 +274,29 @@ export const getUserProfile = async () => {
 	try {
 		const currentUser = await account.get();
 		const response = await database.listDocuments(DATABASE_ID, USER_ID, [
-			Query.equal('accountId', currentUser.$id),
+			Query.equal("accountId", currentUser.$id),
 		]);
 
 		if (!response.documents.length) {
-			throw new Error('User profile not found');
+			const profile = await database.createDocument(
+				DATABASE_ID,
+				USER_ID,
+				ID.unique(),
+				{
+					accountId: currentUser.$id,
+					email: currentUser.email,
+					name: currentUser.name,
+					avatar: avatars.getInitialsURL(currentUser.name).toString(),
+				}
+			);
+
+			return profile;
 		}
 
 		return response.documents[0];
 	} catch (error) {
-		console.error('Error getting user profile:', error);
-		throw new Error('Failed to get user profile');
+		console.error("Error getting user profile:", error);
+		throw error;
 	}
 };
 
@@ -291,11 +304,11 @@ export const updateUserProfile = async (
 	name: string,
 	email: string,
 	currentPassword: string,
-	newPassword?: string,
+	newPassword?: string
 ) => {
 	try {
 		const currentUser = await account.get();
-		const avatarUrl = avatars.getInitials(name).toString();
+		const avatarUrl = avatars.getInitialsURL(name).toString();
 
 		// First update password if provided
 		if (newPassword && currentPassword) {
@@ -314,11 +327,11 @@ export const updateUserProfile = async (
 
 		// Then update user document in database using accountId
 		const response = await database.listDocuments(DATABASE_ID, USER_ID, [
-			Query.equal('accountId', currentUser.$id),
+			Query.equal("accountId", currentUser.$id),
 		]);
 
 		if (!response.documents.length) {
-			throw new Error('User profile not found');
+			throw new Error("User profile not found");
 		}
 
 		await database.updateDocument(
@@ -329,17 +342,17 @@ export const updateUserProfile = async (
 				name,
 				email,
 				avatar: avatarUrl,
-			},
+			}
 		);
 
-		return {success: true};
+		return { success: true };
 	} catch (error) {
-		console.error('Error updating user:', error);
+		console.error("Error updating user:", error);
 		if (
 			error instanceof Error &&
-			error.message.includes('Invalid credentials')
+			error.message.includes("Invalid credentials")
 		) {
-			throw new Error('Current password is incorrect');
+			throw new Error("Current password is incorrect");
 		}
 		throw error;
 	}
@@ -351,40 +364,40 @@ export const deleteUserAccount = async () => {
 
 		// 1. Delete all saved movies
 		const savedMovies = await database.listDocuments(DATABASE_ID, MOVIE_ID, [
-			Query.equal('userId', currentUser.$id),
+			Query.equal("userId", currentUser.$id),
 		]);
 		await Promise.all(
 			savedMovies.documents.map((doc) =>
-				database.deleteDocument(DATABASE_ID, MOVIE_ID, doc.$id),
-			),
+				database.deleteDocument(DATABASE_ID, MOVIE_ID, doc.$id)
+			)
 		);
 
 		// 2. Delete user profile from database
 		const userProfile = await database.listDocuments(DATABASE_ID, USER_ID, [
-			Query.equal('accountId', currentUser.$id),
+			Query.equal("accountId", currentUser.$id),
 		]);
 		if (userProfile.documents.length > 0) {
 			await database.deleteDocument(
 				DATABASE_ID,
 				USER_ID,
-				userProfile.documents[0].$id,
+				userProfile.documents[0].$id
 			);
 		}
 
 		// Call the delete-account function with the exact function ID
 		const response = await functions.createExecution(
 			process.env.EXPO_PUBLIC_APPWRITE_DELETE_ACCOUNT_FUNCTION_ID!,
-			JSON.stringify({userId: currentUser.$id}),
+			JSON.stringify({ userId: currentUser.$id })
 		);
 
-		if (response.status === 'failed') {
-			throw new Error(response.errors || 'Failed to delete account');
+		if (response.status === "failed") {
+			throw new Error(response.errors || "Failed to delete account");
 		}
 
-		router.replace('/signin');
-		return {success: true};
+		router.replace("/signin");
+		return { success: true };
 	} catch (error) {
-		console.error('Delete account error:', error);
+		console.error("Delete account error:", error);
 		throw error;
 	}
 };
@@ -392,7 +405,7 @@ export const deleteUserAccount = async () => {
 export const createAuthUser = async (
 	email: string,
 	password: string,
-	name: string,
+	name: string
 ) => {
 	try {
 		// First create the auth user
@@ -400,10 +413,10 @@ export const createAuthUser = async (
 			ID.unique(),
 			email,
 			password,
-			name,
+			name
 		);
 		if (!newAuthUser) {
-			throw new Error('Failed to create auth account');
+			throw new Error("Failed to create auth account");
 		}
 
 		// Create a session for the new user to be able to create their profile
@@ -414,7 +427,7 @@ export const createAuthUser = async (
 		await account.createEmailPasswordSession(email, password);
 
 		// Now create their user profile
-		const avatarUrl = avatars.getInitials(name).toString();
+		const avatarUrl = avatars.getInitialsURL(name).toString();
 		const newDBUser = await database.createDocument(
 			DATABASE_ID,
 			USER_ID,
@@ -424,16 +437,16 @@ export const createAuthUser = async (
 				email,
 				name,
 				avatar: avatarUrl,
-			},
+			}
 		);
 
 		// Delete the temporary session since they need to sign in properly
-		await account.deleteSession('current');
+		await account.deleteSession("current");
 
-		return {success: true};
+		return { success: true };
 	} catch (error) {
-		console.error('Error creating user:', error);
-		throw new Error('Failed to create account');
+		console.error("Error creating user:", error);
+		throw new Error("Failed to create account");
 	}
 };
 
@@ -443,9 +456,9 @@ export const createUserSession = async (email: string, password: string) => {
 		const authUser = await account.get();
 		const dbUser = await getUserProfile();
 
-		return {success: true, session, user: {...authUser, ...dbUser}};
+		return { success: true, session, user: { ...authUser, ...dbUser } };
 	} catch (error) {
-		console.error('Login error:', error);
-		throw new Error('Invalid credentials');
+		console.error("Login error:", error);
+		throw error instanceof Error ? error : new Error("Login failed");
 	}
 };

@@ -1,5 +1,6 @@
 import {Stack} from 'expo-router';
 import '../global.css';
+
 const AuthLayout = () => {
 	return (
 		<Stack>
