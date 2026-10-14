@@ -44,7 +44,8 @@
             "./node_modules/@expo-google-fonts/barlow/400Regular/Barlow_400Regular.ttf"
           ]
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

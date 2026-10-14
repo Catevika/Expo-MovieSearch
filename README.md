@@ -1,50 +1,123 @@
-# Welcome to your Expo app 👋
+# MovieSearch
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+MovieSearch is a modern movie discovery app built with Expo and React Native. It lets users explore trending and latest films, search the TMDB catalog, open detailed movie pages, save favorites, and manage authentication and profile data through Appwrite.
 
-## Get started
+![MovieSearch app screenshot](./assets/images/Screenshot_catevika-mobile-movies-app.png)
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+- Browse trending movies and the latest releases
+- Search movies by title
+- View detailed information for each movie, including overview, genres, rating, runtime, budget, and revenue
+- Save and remove movies from a personal watchlist
+- Sign in, sign up, and manage user profile details
+- Track popular searches in Appwrite-backed metrics
+- Responsive mobile UI using Expo Router and NativeWind
 
-2. Start the app
+## Tech Stack
 
-   ```bash
-    npx expo start
-   ```
+- React Native + Expo
+- TypeScript
+- Expo Router
+- NativeWind
+- Appwrite for authentication and database storage
+- TMDB API for movie data
 
-In the output, you'll find options to open the app in a
+## Project Structure
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```text
+.
+├── app/                   # App screens and file-based routes
+├── assets/                # Images, icons, fonts
+├── components/            # Reusable UI components
+├── constants/             # App configuration and constants
+├── context/               # Authentication context
+├── services/              # TMDB and Appwrite integrations
+├── types/                 # Type declarations
+├── app.json               # Expo app metadata
+├── babel.config.js        # Babel config
+├── tailwind.config.js     # Tailwind config
+├── package.json           # Project scripts and dependencies
+├── tsconfig.json          # TypeScript config
+└── README.md
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Prerequisites
 
-## Learn more
+Before running the app, make sure you have:
 
-To learn more about developing your project with Expo, look at the following resources:
+- Node.js 18+ recommended
+- npm or yarn
+- Expo CLI
+- An iOS simulator, Android emulator, or Expo Go on a phone
+- A TMDB API key
+- An Appwrite project with the required collections and environment variables
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Environment Variables
 
-## Join the community
+Create a `.env` file in the project root with the following values:
 
-Join our community of developers creating universal apps.
+```env
+EXPO_PUBLIC_MOVIE_BASE_URL=https://api.themoviedb.org/3
+EXPO_PUBLIC_MOVIE_API_KEY=your_tmdb_api_key
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+EXPO_PUBLIC_APPWRITE_PROJECT_ID=your_appwrite_project_id
+EXPO_PUBLIC_APPWRITE_DATABASE_ID=your_appwrite_database_id
+EXPO_PUBLIC_APPWRITE_METRICS_ID=your_appwrite_metrics_collection_id
+EXPO_PUBLIC_APPWRITE_MOVIE_ID=your_appwrite_saved_movies_collection_id
+EXPO_PUBLIC_APPWRITE_USER_ID=your_appwrite_users_collection_id
+EXPO_PUBLIC_APPWRITE_DELETE_ACCOUNT_FUNCTION_ID=your_appwrite_delete_function_id
+```
+
+## Appwrite Setup
+
+This app uses Appwrite for:
+
+- Email/password authentication
+- User profile storage
+- Saved movie records per user
+- Search metrics/trending data
+
+You will need to configure the project and create the collections/IDs referenced above. The app expects the following patterns:
+
+- User collection: stores user profile data such as `accountId`, `name`, `email`, and `avatar`
+- Saved movies collection: stores records keyed by `userId` and `movieId`
+- Metrics collection: stores search and popularity data such as `searchTerm`, `title`, `movie_id`, `count`, and `poster_url`
+
+## Installation
+
+```bash
+npm install
+```
+
+## Running the App
+
+Start the Expo development server:
+
+```bash
+npx expo start
+```
+
+Then choose one of the available options:
+
+- Run on Android emulator
+- Run on iOS simulator
+- Open in Expo Go on a physical device
+- Launch the web version
+
+Useful scripts:
+
+```bash
+npm run android
+npm run ios
+npm run web
+npm run lint
+```
+
+## Notes
+
+This product uses the TMDB API but is not endorsed or certified by TMDB.
+
+## License
+
+This project is for educational/demo purposes and may be used with the appropriate service credentials and licenses.

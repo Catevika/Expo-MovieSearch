@@ -1,0 +1,12 @@
+diff --git a/node_modules/react-native-appwrite/dist/cjs/sdk.js b/node_modules/react-native-appwrite/dist/cjs/sdk.js
+--- a/node_modules/react-native-appwrite/dist/cjs/sdk.js
++++ b/node_modules/react-native-appwrite/dist/cjs/sdk.js
+@@ -5 +5 @@
+-var FileSystem = require('expo-file-system');
++var FileSystem = require('expo-file-system/legacy');
+diff --git a/node_modules/react-native-appwrite/dist/esm/sdk.js b/node_modules/react-native-appwrite/dist/esm/sdk.js
+--- a/node_modules/react-native-appwrite/dist/esm/sdk.js
++++ b/node_modules/react-native-appwrite/dist/esm/sdk.js
+@@ -3 +3 @@
+-import * as FileSystem from 'expo-file-system';
++import * as FileSystem from 'expo-file-system/legacy';

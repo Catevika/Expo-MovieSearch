@@ -4,6 +4,9 @@
 		"catevika",
 		"mobileprovision",
 		"nativewind",
-		"TMDB"
+		"TMDB",
+		"watchlist",
+		"worklet",
+		"worklets"
 	]
 }
