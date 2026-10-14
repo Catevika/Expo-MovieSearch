@@ -5,6 +5,7 @@ import {Image, Text, TouchableOpacity, View} from 'react-native';
 const TrendingCard = ({
 	movie: {movie_id, title, poster_url},
 	index,
+	cardWidth = 128,
 }: TrendingCardProps) => {
 	const id = movie_id;
 
@@ -12,21 +13,39 @@ const TrendingCard = ({
 		<Link
 			href={`/movie/${id}`}
 			asChild>
-			<TouchableOpacity className='w-32 relative mr-16 pl-5'>
+			<TouchableOpacity
+				style={{width: cardWidth}}
+				className='relative'>
 				<Image
 					source={{uri: poster_url}}
-					resizeMode='contain'
-					className='w-32 h-48 rounded-lg'
+					resizeMode='cover'
+					className='w-full rounded-lg'
+					style={{aspectRatio: 2 / 3}}
 				/>
-				<View className='absolute top-32 -left-3.5 px-2 py-1 rounded-full'>
+				<View
+					className='absolute'
+					style={{
+						top: cardWidth,
+						left: -cardWidth * 0.11,
+					}}>
 					<MaskedView
 						maskElement={
-							<Text className='text-white font-bold text-6xl'>{index + 1}</Text>
+							<Text
+								className='text-white font-bold'
+								style={{
+									fontSize: cardWidth * 0.46,
+									lineHeight: cardWidth * 0.5,
+								}}>
+								{index + 1}
+							</Text>
 						}>
 						<Image
 							source={images.rankingGradient}
 							resizeMode='cover'
-							className='size-14'
+							style={{
+								width: cardWidth * 0.45,
+								height: cardWidth * 0.45,
+							}}
 						/>
 					</MaskedView>
 				</View>

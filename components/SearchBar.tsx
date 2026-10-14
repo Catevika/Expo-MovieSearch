@@ -8,7 +8,7 @@ const SearchBar = ({
 	onReset,
 }: SearchBarProps) => {
 	return (
-		<View className='flex-row items-center px-5'>
+		<View className='w-full flex-row items-center px-5 md:w-4/5 md:self-center md:px-0'>
 			<View className='flex-1 flex-row items-center gap-2 bg-dark-200 rounded-full px-5 py-4'>
 				<TextInput
 					value={value}
@@ -16,7 +16,7 @@ const SearchBar = ({
 					onSubmitEditing={onSubmitEditing}
 					placeholder='Search movies...'
 					placeholderTextColor='#a8b5db'
-					className='flex-1 text-light-200 ml-2'
+					className='flex-1 text-light-200 text-lg ml-2'
 					returnKeyType='search'
 				/>
 				<TouchableOpacity

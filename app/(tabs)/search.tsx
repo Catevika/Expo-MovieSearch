@@ -2,14 +2,24 @@ import MovieCard from '@/components/MovieCard';
 import SearchBar from '@/components/SearchBar';
 import {icons} from '@/constants/icons';
 import {images} from '@/constants/images';
+import {getMovieGridLayout} from '@/constants/movieGrid';
 import {fetchMovies} from '@/services/api';
 import {updateSearchCount} from '@/services/appwrite';
 import useFetch from '@/services/useFetch';
 import {useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, Image, Text, View} from 'react-native';
+import {
+	ActivityIndicator,
+	FlatList,
+	Image,
+	Text,
+	View,
+	useWindowDimensions,
+} from 'react-native';
 
 const Search = () => {
 	const [searchQuery, setSearchQuery] = useState('');
+	const {width} = useWindowDimensions();
+	const {numColumns, cardWidth, columnGap} = getMovieGridLayout(width);
 
 	const {
 		data: searchedMovies,
@@ -68,15 +78,21 @@ const Search = () => {
 				onReset={handleReset}
 			/>
 			<FlatList
+				key={numColumns}
 				data={searchedMovies || []}
-				renderItem={({item}) => <MovieCard {...item} />}
+				renderItem={({item}) => (
+					<MovieCard
+						{...item}
+						cardWidth={cardWidth}
+					/>
+				)}
 				keyExtractor={(item) => item.id.toString()}
 				showsVerticalScrollIndicator={false}
-				className='px-5'
-				numColumns={3}
+				className='w-full max-w-[1240px] self-center px-5'
+				numColumns={numColumns}
 				columnWrapperStyle={{
 					justifyContent: 'center',
-					gap: 16,
+					gap: columnGap,
 					marginVertical: 16,
 				}}
 				contentContainerStyle={{

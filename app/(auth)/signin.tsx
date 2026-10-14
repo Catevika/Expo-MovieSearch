@@ -5,7 +5,7 @@ import {images} from '@/constants/images';
 import {useAuth} from '@/context/AuthProvider';
 import {Link} from 'expo-router';
 import {useState} from 'react';
-import {Alert, Image, ScrollView, Text, View} from 'react-native';
+import {Alert, Image, Platform, ScrollView, Text, View} from 'react-native';
 
 const SignInPage = () => {
 	const {signIn} = useAuth();
@@ -47,31 +47,47 @@ const SignInPage = () => {
 				<Text className='text-white font-bold text-6xl text-center text-normal my-10'>
 					Sign In
 				</Text>
-				<CustomFormField
-					title='Email'
-					placeholder='jane.doe@example.com'
-					value={form.email}
-					onChangeText={(e: string) => setForm({...form, email: e})}
-				/>
-				<CustomFormField
-					title='Password'
-					placeholder='...'
-					value={form.password}
-					onChangeText={(e: string) => setForm({...form, password: e})}
-				/>
-				<CustomButton
-					onPress={submit}
-					text={isLoading ? 'Signing In...' : 'Sign In'}
-					otherStyles='mx-5 my-5'
-					disabled={isLoading}
-				/>
-				<View className='flex-row items-center justify-center'>
-					<Text className='text-light-200'>Don't have an account? </Text>
-					<Link
-						href='/signup'
-						className='font-bold text-accent'>
-						Sign Up
-					</Link>
+				<View className='w-full md:w-4/5 md:self-center'>
+					<CustomFormField
+						title='Email'
+						placeholder='jane.doe@example.com'
+						value={form.email}
+						onChangeText={(e: string) => setForm({...form, email: e})}
+						wrapperStyles='md:mx-0'
+					/>
+					<CustomFormField
+						title='Password'
+						placeholder='...'
+						value={form.password}
+						onChangeText={(e: string) => setForm({...form, password: e})}
+						wrapperStyles='md:mx-0'
+					/>
+					<CustomButton
+						onPress={submit}
+						text={isLoading ? 'Signing In...' : 'Sign In'}
+						otherStyles='mx-5 my-5 md:w-fit md:self-center md:mx-0 md:px-8'
+						disabled={isLoading}
+					/>
+					<View className='flex-row items-center justify-center'>
+						<Text className='text-light-200'>Don't have an account? </Text>
+						<Link
+							href='/signup'
+							onPress={(event) => {
+								if (Platform.OS === 'web') {
+									const target = event.currentTarget;
+									if (
+										target &&
+										typeof target !== 'number' &&
+										'blur' in target
+									) {
+										target.blur();
+									}
+								}
+							}}
+							className='font-bold text-accent'>
+							Sign Up
+						</Link>
+					</View>
 				</View>
 			</ScrollView>
 		</View>

@@ -2,10 +2,12 @@ import MovieCard from '@/components/MovieCard';
 import TrendingCard from '@/components/TrendingCard';
 import {icons} from '@/constants/icons';
 import {images} from '@/constants/images';
+import {getMovieGridLayout} from '@/constants/movieGrid';
 import {fetchMovies} from '@/services/api';
 import {getTrendingMovies} from '@/services/appwrite';
 import useFetch from '@/services/useFetch';
 import {router} from 'expo-router';
+import {useWindowDimensions} from 'react-native';
 import {
 	ActivityIndicator,
 	Alert,
@@ -20,6 +22,8 @@ import {
 } from 'react-native';
 
 export default function Home() {
+	const {width} = useWindowDimensions();
+	const {numColumns, cardWidth, columnGap} = getMovieGridLayout(width);
 	const {
 		data: movies,
 		isLoading: moviesIsLoading,
@@ -95,7 +99,7 @@ export default function Home() {
 				/>
 				<TouchableOpacity
 					onPress={() => router.push('/search')}
-					className='flex-row items-center bg-dark-200 gap-2 rounded-full m-5 px-5 py-4'>
+					className='flex-row items-center bg-dark-200 gap-2 rounded-full m-5 px-5 py-4 md:w-4/5 md:self-center md:mx-0'>
 					<Text className='flex-1 flex-row ml-2 m-0 p-0 text-light-200'>
 						Search movies online
 					</Text>
@@ -119,7 +123,7 @@ export default function Home() {
 							tintColor='#ab8bff'
 						/>
 					}>
-					<View className='flex-1 mt-5'>
+					<View className='flex-1 mt-5 w-full max-w-[1200px] self-center'>
 						<Text className='text-lg text-white font-bold mb-3'>
 							Trending Movies
 						</Text>
@@ -130,12 +134,15 @@ export default function Home() {
 									<TrendingCard
 										movie={item}
 										index={index}
+										cardWidth={cardWidth}
 									/>
 								)}
 								keyExtractor={(item) => item.movie_id.toString()}
 								horizontal
 								showsHorizontalScrollIndicator={false}
-								ItemSeparatorComponent={() => <View className='w-4' />}
+								ItemSeparatorComponent={() => (
+									<View style={{width: columnGap}} />
+								)}
 								className='mt-3 mb-4'
 							/>
 						) : (
@@ -148,14 +155,19 @@ export default function Home() {
 						</Text>
 						{movies ? (
 							<FlatList
+								key={numColumns}
 								data={movies}
-								renderItem={({item}) => <MovieCard {...item} />}
+								renderItem={({item}) => (
+									<MovieCard
+										{...item}
+										cardWidth={cardWidth}
+									/>
+								)}
 								keyExtractor={(item) => item.id.toString()}
-								numColumns={3}
+								numColumns={numColumns}
 								columnWrapperStyle={{
-									justifyContent: 'flex-start',
-									gap: 20,
-									paddingRight: 5,
+									justifyContent: 'center',
+									gap: columnGap,
 									marginBottom: 10,
 								}}
 								className='mt-2 pb-32'

@@ -5,7 +5,7 @@ import {images} from '@/constants/images';
 import {createUser} from '@/services/auth';
 import {Link, router} from 'expo-router';
 import {useState} from 'react';
-import {Alert, Image, ScrollView, Text, View} from 'react-native';
+import {Alert, Image, Platform, ScrollView, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 const SignUpPage = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,37 +50,54 @@ const SignUpPage = () => {
 				<Text className='text-white font-bold text-6xl text-center text-normal my-5'>
 					Sign Up
 				</Text>
-				<CustomFormField
-					title='Username'
-					placeholder='Jane Doe'
-					value={form.name}
-					onChangeText={(e: string) => setForm({...form, name: e})}
-				/>
-				<CustomFormField
-					title='Email'
-					placeholder='jane.doe@example.com'
-					value={form.email}
-					onChangeText={(e: string) => setForm({...form, email: e})}
-				/>
-				<CustomFormField
-					title='Password'
-					placeholder='...'
-					value={form.password}
-					onChangeText={(e: string) => setForm({...form, password: e})}
-				/>
-				<CustomButton
-					onPress={submit}
-					text={isSubmitting ? 'Signing Up...' : 'Sign Up'}
-					otherStyles='mx-5 my-5'
-					disabled={isSubmitting}
-				/>
-				<View className='flex-row items-center justify-center'>
-					<Text className='text-light-200'>Already have an account? </Text>
-					<Link
-						href='/signin'
-						className='font-bold text-accent'>
-						Sign In
-					</Link>
+				<View className='w-full md:w-4/5 md:self-center'>
+					<CustomFormField
+						title='Username'
+						placeholder='Jane Doe'
+						value={form.name}
+						onChangeText={(e: string) => setForm({...form, name: e})}
+						wrapperStyles='md:mx-0'
+					/>
+					<CustomFormField
+						title='Email'
+						placeholder='jane.doe@example.com'
+						value={form.email}
+						onChangeText={(e: string) => setForm({...form, email: e})}
+						wrapperStyles='md:mx-0'
+					/>
+					<CustomFormField
+						title='Password'
+						placeholder='...'
+						value={form.password}
+						onChangeText={(e: string) => setForm({...form, password: e})}
+						wrapperStyles='md:mx-0'
+					/>
+					<CustomButton
+						onPress={submit}
+						text={isSubmitting ? 'Signing Up...' : 'Sign Up'}
+						otherStyles='mx-5 my-5 md:w-fit md:self-center md:mx-0 md:px-8'
+						disabled={isSubmitting}
+					/>
+					<View className='flex-row items-center justify-center'>
+						<Text className='text-light-200'>Already have an account? </Text>
+						<Link
+							href='/signin'
+							onPress={(event) => {
+								if (Platform.OS === 'web') {
+									const target = event.currentTarget;
+									if (
+										target &&
+										typeof target !== 'number' &&
+										'blur' in target
+									) {
+										target.blur();
+									}
+								}
+							}}
+							className='font-bold text-accent'>
+							Sign In
+						</Link>
+					</View>
 				</View>
 			</ScrollView>
 		</SafeAreaView>

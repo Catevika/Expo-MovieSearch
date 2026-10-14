@@ -82,6 +82,7 @@ interface MovieDetails {
 interface TrendingCardProps {
 	movie: TrendingMovie;
 	index: number;
+	cardWidth?: number;
 }
 
 interface MovieInfoProps {
@@ -125,6 +126,7 @@ interface FieldProps {
 	placeholderTextColor?: string;
 	onChangeText: (e: string) => void;
 	otherStyles?: string;
+	wrapperStyles?: string;
 }
 
 interface User {

@@ -3,11 +3,19 @@ import {icons} from '@/constants/icons';
 import {useAuth} from '@/context/AuthProvider';
 import {router, Tabs} from 'expo-router';
 import {useEffect, useState} from 'react';
-import {ActivityIndicator, Keyboard, Platform, View} from 'react-native';
+import {
+	ActivityIndicator,
+	Keyboard,
+	Platform,
+	View,
+	useWindowDimensions,
+} from 'react-native';
 
 export default function TabsLayout() {
 	const {isLoading, isAuthenticated} = useAuth();
 	const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+	const {width} = useWindowDimensions();
+	const isWideLayout = width >= 768;
 
 	useEffect(() => {
 		const redirect = () => {
@@ -67,15 +75,15 @@ export default function TabsLayout() {
 				tabBarHideOnKeyboard: true,
 				tabBarStyle: {
 					position: 'absolute',
-					left: 20,
-					right: 20,
+					left: isWideLayout ? '10%' : 20,
+					right: isWideLayout ? '10%' : 20,
 					bottom: Platform.OS === 'ios' ? 36 : 24,
 					height: 52,
 					backgroundColor: '#0F0D23',
 					borderRadius: 50,
 					borderWidth: 1,
 					borderColor: '#0F0D23',
-					marginHorizontal: 15,
+					marginHorizontal: isWideLayout ? 0 : 15,
 					display: isKeyboardVisible ? 'none' : 'flex',
 				},
 			}}>

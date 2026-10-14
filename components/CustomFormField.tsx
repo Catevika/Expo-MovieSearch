@@ -8,12 +8,13 @@ const CustomFormField = ({
 	placeholder,
 	onChangeText,
 	otherStyles,
+	wrapperStyles,
 }: FieldProps) => {
 	const [showPassword, setShowPassword] = useState(false);
 	const isPasswordField = title.toLowerCase().includes('password');
 
 	return (
-		<View className='mx-5 mb-5'>
+		<View className={`mx-5 mb-5 ${wrapperStyles ?? ''}`}>
 			<Text className='text-white mb-2'>{title}</Text>
 			<View className='relative'>
 				<TextInput
@@ -22,7 +23,7 @@ const CustomFormField = ({
 					placeholder={placeholder}
 					placeholderTextColor='#a8b5db'
 					secureTextEntry={isPasswordField && !showPassword}
-					className={`bg-dark-200 text-light-200 rounded-lg p-5 ${otherStyles}`}
+					className={`bg-dark-200 text-light-200 text-lg rounded-lg p-5 ${otherStyles}`}
 				/>
 				{isPasswordField && (
 					<TouchableOpacity

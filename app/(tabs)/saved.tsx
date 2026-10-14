@@ -87,7 +87,7 @@ const Saved = () => {
 			/>
 			<TouchableOpacity
 				onPress={() => router.push('/search')}
-				className='flex-row items-center bg-dark-200 gap-2 rounded-full m-5 px-5 py-4'>
+				className='flex-row items-center bg-dark-200 gap-2 rounded-full m-5 px-5 py-4 md:w-4/5 md:self-center md:mx-0'>
 				<Text className='flex-1 flex-row ml-2 m-0 p-0 text-light-200'>
 					Search movies online
 				</Text>
@@ -106,7 +106,8 @@ const Saved = () => {
 					renderItem={({item}) => <SavedMovieCard {...item} />}
 					keyExtractor={(item) => item.id.toString()}
 					showsVerticalScrollIndicator={false}
-					contentContainerClassName='flex-grow pb-32 px-4'
+					className='w-full md:w-4/5 self-center'
+					contentContainerClassName='flex-grow pb-32 px-4 md:px-0'
 					ListHeaderComponent={
 						<Text className='text-lg text-white font-bold mt-5 mb-5'>
 							Saved Movies

@@ -10,13 +10,15 @@ const MovieCard = ({
 	release_date,
 	vote_average,
 	index = 0,
-}: Movie & {index?: number}) => {
+	cardWidth = 105,
+}: Movie & {index?: number; cardWidth?: number}) => {
 	return (
 		<Animated.View entering={FadeInDown.delay(index * 100).springify()}>
-			<View className='w-[105px]'>
+			<View style={{width: cardWidth}}>
 				<TouchableOpacity
 					onPress={() => router.push(`/movie/${id}`)}
-					className='w-full h-[155px] overflow-hidden rounded-xl mb-2'>
+					className='w-full overflow-hidden rounded-xl mb-2'
+					style={{aspectRatio: 2 / 3}}>
 					<Image
 						source={{
 							uri: poster_path

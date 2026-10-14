@@ -44,7 +44,7 @@ const index = () => {
 				<CustomButton
 					onPress={() => router.push('/home')}
 					text='Continue'
-					otherStyles='mx-5 mb-10'
+					otherStyles='mx-5 mb-10 md:w-fit md:self-center md:mx-0 md:px-8'
 				/>
 			</View>
 		</>
